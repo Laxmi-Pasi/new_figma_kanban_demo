@@ -13,20 +13,50 @@
               </div>
               <div class="sub-tickets">
                 <% interview.departments.each do |dept| %>
-                  <% i=1%>
-                  <% dept.no_of_resources.times do |res| %>
-                  <div class="card m-2 main-request border border-dark"  draggable="true" id="item1" >
-                    <div class="card-body">
-                        <p class="mb-0"><%="#{dept.name} #{i}"%></p>
+                  <% if interview.kanban_column.name == 'new_request' %>
+                    <div class="card m-2 main-request border border-dark"  draggable="true" id="item1" >
+                      <div class="card-body">
+                          <p class="mb-0">dept. <%=dept.name%></p>
+                          <p class="mb-0">no of resources: <%=dept.no_of_resources%></p>
+                      </div>
                     </div>
-                  </div>
-                  <% i=i+1%>
+                  <% end %>
+                  <% dept.developers.each do |dev| %>
+                    <% if col.name == dev.developer_status %>
+                      <div class="border bg-warning bg-opacity-50 m-2">
+                        <div class="sub-tickets">
+                            <div class="card m-2 main-request border border-dark"  draggable="true" id="item1" >
+                              <div class="card-body">
+                                  <p class="mb-0">dept. <%=dev.name%></p>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    <% end %>
                   <% end %>
                 <%end%>
               </div>
             </div>
           <%end%>
+          <!--if developers exist and main ticket is in new request-->
+          <% @client_requests.each do |interview| %>
+            <% interview.departments.each do |dept| %>
+              <% dept.developers.each do |dev| %>
+                <% if col.name == dev.developer_status && interview.kanban_column.name !=  dev.developer_status %>
+                  <div class="bg-warning bg-opacity-50 m-2" >
+                    <div class=" m-2">
+                      #id : <%=interview.id%>
+                    </div>
+                    <div class="card border border-dark m-2" draggable="true">
+                      <p class="mb-0">dept. <%=dept.name%></p>
+                      <p class="mb-0">developer. <%=dev.name%></p>
+                    </div>
+                  </div>
+                <% end %>
+              <%end%>
+            <%end %>
+          <%end%>
       </div>
     <% end %>
-  </div>
+  </div> 
 </div>

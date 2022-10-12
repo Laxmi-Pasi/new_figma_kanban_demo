@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-customer_name = ["Technosofts","Infotech"]
+customer_name = ["Gateway","meditab"]
 1.times do |i|
   kanban_column = KanbanColumn.find_or_create_by!(name:i)
   client_request = kanban_column.client_requests.create!(customer_name: customer_name[i])
