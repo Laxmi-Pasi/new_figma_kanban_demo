@@ -1,0 +1,32 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-around">
+    <% @kanban_columns.each do |col| %>
+      <div class="box border">
+          <h1><%=col.name%></h1>
+          <% col.client_requests.each do |interview| %>
+            <div class="border bg-warning bg-opacity-50 m-2">
+              <div class="card m-2 main-request border border-danger" id="item1" >
+                <div class="card-body">
+                <p class="card-text mb-0">#<%= interview.id %></p>
+                <h5 class="card-title"><%= interview.customer_name %></h5>
+                </div>
+              </div>
+              <div class="sub-tickets">
+                <% interview.departments.each do |dept| %>
+                  <% i=1%>
+                  <% dept.no_of_resources.times do |res| %>
+                  <div class="card m-2 main-request border border-dark"  draggable="true" id="item1" >
+                    <div class="card-body">
+                        <p class="mb-0"><%="#{dept.name} #{i}"%></p>
+                    </div>
+                  </div>
+                  <% i=i+1%>
+                  <% end %>
+                <%end%>
+              </div>
+            </div>
+          <%end%>
+      </div>
+    <% end %>
+  </div>
+</div>
