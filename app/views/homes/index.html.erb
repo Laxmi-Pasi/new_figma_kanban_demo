@@ -1,62 +1,173 @@
 <div class="container mt-5">
   <div class="d-flex justify-content-around">
     <% @kanban_columns.each do |col| %>
-      <div class="box border">
+      <div class="box border" data-item="<%=col.id %>">
           <h1><%=col.name%></h1>
-          <% col.client_requests.each do |interview| %>
-            <div class="border bg-warning bg-opacity-50 m-2">
-              <div class="card m-2 main-request border border-danger" id="item1" >
-                <div class="card-body">
-                <p class="card-text mb-0">#<%= interview.id %></p>
-                <h5 class="card-title"><%= interview.customer_name %></h5>
+          <div class="kvs-card" style="height: 800px; overflow: auto;">
+            <% col.client_requests.each do |interview| %>
+              <div class="border bg-warning bg-opacity-50 m-2">
+                <div class="card m-2  border border-danger" >
+                  <div class="card-body">
+                    <p class="card-text mb-0">#<%= interview.id %></p>
+                    <h5 class="card-title"><%= interview.customer_name %></h5>
+                  </div>
                 </div>
-              </div>
-              <div class="sub-tickets">
-                <% interview.departments.each do |dept| %>
-                  <% if interview.kanban_column.name == 'new_request' %>
-                    <div class="card m-2 main-request border border-dark"  draggable="true" id="item1" >
-                      <div class="card-body">
-                          <p class="mb-0">dept. <%=dept.name%></p>
-                          <p class="mb-0">no of resources: <%=dept.no_of_resources%></p>
-                      </div>
-                    </div>
-                  <% end %>
-                  <% dept.developers.each do |dev| %>
-                    <% if col.name == dev.developer_status %>
-                      <div class="border bg-warning bg-opacity-50 m-2">
-                        <div class="sub-tickets">
-                            <div class="card m-2 main-request border border-dark"  draggable="true" id="item1" >
-                              <div class="card-body">
-                                  <p class="mb-0">dept. <%=dev.name%></p>
-                              </div>
-                            </div>
+                <div class="sub-tickets">
+                  <% interview.departments.each do |dept| %>
+                    <% if interview.kanban_column.name == 'new_request' %>
+                      <div class="card m-2  border border-dark" >
+                        <div class="card-body">
+                            <p class="mb-0">dept. <%=dept.name%></p>
+                            <p class="mb-0">no of resources: <%=dept.no_of_resources%></p>
                         </div>
                       </div>
                     <% end %>
+                    <% dept.developers.each do |dev| %>
+                      <% if col.name == dev.developer_status %>
+                        <div class="sub-card">
+                            <div class="card m-2  border border-dark"  data-item="<%=dev.id %>">
+                              <p class="mb-0">dept. <%=dept.name%></p>
+                              <p class="mb-0">developer. <%=dev.name%></p>
+                            </div>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  <%end%>
+                </div>
+              </div>
+            <%end%>
+            <!--if developers exist and main ticket is in new request-->
+            <% @client_requests.each do |interview| %>
+              <% interview.departments.each do |dept| %>
+                <% dept.developers.each do |dev| %>
+                  <% if col.name == dev.developer_status && interview.kanban_column.name !=  dev.developer_status %>
+                    <div class="m-2 sub-card">
+                      <div class="card m-2" data-item="<%=dev.id %>">
+                        <div class="card-header">
+                          #id : <%=interview.id%>
+                          <%=interview.customer_name%>
+                        </div>
+                        <div class="card-body">
+                          #id : <%=dev.id%>
+                          <p class="mb-0">dept. <%=dept.name%></p>
+                          <p class="mb-0">developer. <%=dev.name%></p>
+                        </div>
+                      </div>
+                    </div> 
                   <% end %>
                 <%end%>
-              </div>
-            </div>
-          <%end%>
-          <!--if developers exist and main ticket is in new request-->
-          <% @client_requests.each do |interview| %>
-            <% interview.departments.each do |dept| %>
-              <% dept.developers.each do |dev| %>
-                <% if col.name == dev.developer_status && interview.kanban_column.name !=  dev.developer_status %>
-                  <div class="bg-warning bg-opacity-50 m-2" >
-                    <div class=" m-2">
-                      #id : <%=interview.id%>
-                    </div>
-                    <div class="card border border-dark m-2" draggable="true">
-                      <p class="mb-0">dept. <%=dept.name%></p>
-                      <p class="mb-0">developer. <%=dev.name%></p>
-                    </div>
-                  </div>
-                <% end %>
-              <%end%>
-            <%end %>
-          <%end%>
+              <%end %>
+            <%end%>
+          </div>
       </div>
-    <% end %>
+    <% end %>  
   </div> 
 </div>
+
+<script>
+ 
+
+  // ---------------- Kanban with Sortable --------------------
+
+    $( function() {
+      $( ".kvs-card, .sub-card, .sub1-card" ).sortable({
+        connectWith: ".kvs-card",
+        // event => sub-card div
+        // ui => selected card jisme draggeble =true
+        // this = event.target
+            start: function( event, ui ) {
+              // debugger
+              console.log("Take IT......");
+              // console.log(event);
+              // console.log(ui);
+              // console.log(this.id);
+              this.parentElement.style.border = "2px dashed #ccc";
+                  ui.item[0].style.border = "1px dashed black";
+            },
+
+            change: function(event, ui){
+              // console.log("This is Change Event");
+              // console.log("Called When something changes");
+              ui.item[0].style.border = "1px solid red";
+            },
+
+            out: function( event, ui ) {
+              // console.log("This is out event")
+              // console.log("Called When card move outside sortable area")
+              $(this).css('background-color', 'rgba(0,0,0,.0)')
+            },
+
+            over: function( event, ui ) {
+              // debugger
+              // console.log("This is over event")
+              // console.log("Called When card move inside sortable area")
+              $(this).css('background-color', 'rgba(0,0,0,.1)')
+            },
+
+          receive: function(event, ui) {
+              this.style.border = "1px solid black";
+              var developer_id = ui.item[0].dataset.item  // developer id
+              var kanban_col_id = this.parentElement.dataset.item // kanban_col id
+              // debugger
+              //   $(".kvs-card, .sub-card").sortable('cancel');
+              //   var ad = $.ajax({
+              //   url: "/interviews/" + el.item[0].getAttribute('value') + "/getAD",
+              //   type: "get",
+              //   async: false,
+              //   success: function(data) {},
+              //   error: function(data) {}
+              // })
+              // var interview_status = ad.responseJSON.interview_status
+              // // console.log(ad)
+              // if(interview_status === 'new_request')
+              // {
+              //   alert("can't move"); // need to check with karan
+              //   $(".kvs-card").sortable('cancel');
+              //   return;
+              // }
+              $.ajax({
+                url: "/developer_status_update",
+                type: "post",
+                data: {developer_id: developer_id, kanban_col_id:kanban_col_id},
+                success: function(data) {alert("updated")},
+                error: function(data) {}
+              })
+              console.log("--------receive----------");
+              $(this.parentElement).css('background-color', 'rgba(0,0,0,.0)')
+
+            },
+            update: function( event, ui ) {
+              console.log("--------update----------");
+            },
+
+            stop: function( event, ui ) {
+              console.log("--------stop----------");
+              //------------------reordering-------------------
+              const ulElements = document.querySelectorAll(".kvs-card")
+              const kanbanIds = {"columns": []};
+              ulElements.forEach(ul => {
+                const itemIds = [];
+                ul.querySelectorAll(".kvs-card-board")
+                .forEach(item => itemIds.push(Number.parseInt(item.getAttribute('value'))));
+                kanbanIds.columns.push(
+                  {
+                    'id': Number.parseInt(ul.parentElement.id),
+                    'itemIds': itemIds
+                  }
+                );
+              });
+
+              // $.ajax({
+              //   url: '/interviews/sort',
+              //   type: "post",
+              //   async: false,
+              //   data:{ KanbanCardIds: JSON.stringify(kanbanIds) },
+              //   success: function(data) {},
+              // })
+              //----------------------------------------------------
+            },
+
+        });
+      });
+      // ---------------- Kanban with Sortable --------------------
+</script>
