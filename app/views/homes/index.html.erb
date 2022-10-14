@@ -1,3 +1,5 @@
+<%= link_to "New client request" ,new_client_request_path, method: :get ,class:"btn-warning border-0 rounded shadow p-3 m-3" %>
+<%= link_to "Add department" ,new_department_path, method: :get ,class:"btn-warning border-0 rounded shadow p-3 m-3" %>
 <div class="container mt-5">
   <div class="d-flex justify-content-around">
     <% @kanban_columns.each do |col| %>
@@ -19,6 +21,7 @@
                         <div class="card-body">
                             <p class="mb-0">dept. <%=dept.name%></p>
                             <p class="mb-0">no of resources: <%=dept.no_of_resources%></p>
+                            <p><%= link_to "assign developer" %></p>
                         </div>
                       </div>
                     <% end %>

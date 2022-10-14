@@ -1,0 +1,16 @@
+<div class="container my-3">
+<div class="row justify-content-center">
+<div class="col-19 my-4">
+<div class="card text-center shadow mb-5 bg-light">
+<%= form_with model: @client_request, url: homes_path, method: :post, local: true do |f| %>
+
+<%#= form_with model: @client_request do |f| %>
+  <div class="center">
+    <%= f.label :customer_name , class: "form-group" %>
+    <%= f.text_field :customer_name , class: "form-control" %>
+  </div>
+    <%= f.hidden_field :kanban_column_id  , value: "1"%>
+  <div class="center">
+    <%= f.submit  class: "btn btn-primary my-3" %>
+  </div>
+<% end %>

@@ -1,0 +1,21 @@
+<div class="container my-3">
+<div class="row justify-content-center">
+<div class="col-19 my-4">
+<div class="card text-center shadow mb-5 bg-light">
+<%= form_for @department, as: :department, url: departments_path(@department), method: :post do |f| %>
+  <div class="center">
+    <%= f.label :name , class: "form-group" %>
+    <%= f.text_field :name , class: "form-control" %>
+  </div>
+  <div class="center">
+    <%= f.label :client_request_id , class: "form-group" %><br>
+    <%= f.select :client_request_id, ClientRequest.all.map{|c| [c.customer_name,c.id]}, :prompt => "Select a client_request", class: "form-select" %> 
+  </div>
+  <div class="center">
+    <%= f.label :no_of_resources , class: "form-group" %>
+    <%= f.number_field :no_of_resources , class: "form-control" %>
+  </div>
+  <div class="center">
+    <%= f.submit  class: "btn btn-primary my-3" %>
+  </div>
+<% end %>
