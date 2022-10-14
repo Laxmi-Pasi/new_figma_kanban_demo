@@ -2,71 +2,71 @@
   <div class="d-flex justify-content-around">
     <% @kanban_columns.each do |col| %>
       <div class="box border" data-item="<%=col.id %>">
-          <h1><%=col.name%></h1>
-          <div class="kvs-card" style="height: 800px; overflow: auto;">
-            <% col.client_requests.each do |interview| %>
-              <div class="border bg-warning bg-opacity-50 m-2">
-                <div class="card m-2  border border-danger" >
-                  <div class="card-body">
-                    <p class="card-text mb-0">#<%= interview.id %></p>
-                    <h5 class="card-title"><%= interview.customer_name %></h5>
-                  </div>
-                </div>
-                <div class="sub-tickets">
-                  <% interview.departments.each do |dept| %>
-                    <% if interview.kanban_column.name == 'new_request' %>
-                      <div class="card m-2  border border-dark" >
-                        <div class="card-body">
-                            <p class="mb-0">dept. <%=dept.name%></p>
-                            <p class="mb-0">no of resources: <%=dept.no_of_resources%></p>
-                        </div>
-                      </div>
-                    <% end %>
-                    <% dept.developers.each do |dev| %>
-                      <% if col.name == dev.developer_status %>
-                        <div class="sub-card">
-                            <div class="card m-2  border border-dark"  data-item="<%=dev.id %>">
-                              <p class="mb-0">dept. <%=dept.name%></p>
-                              <p class="mb-0">developer. <%=dev.name%></p>
-                            </div>
-                        </div>
-                      <% end %>
-                    <% end %>
-                  <%end%>
+        <h1><%=col.name%></h1>
+        <div class="kvs-card" style="height: 800px; overflow: auto;">
+          <% col.client_requests.sort_by{ |card| card.position}.each do |interview| %>
+            <div class="border bg-warning bg-opacity-50 m-2">
+              <div class="card m-2 border border-danger" >
+                <div class="card-body">
+                  <p class="card-text mb-0">#<%= interview.id %></p>
+                  <h5 class="card-title"><%= interview.customer_name %></h5>
+                  <p>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#Req<%= interview.id %>" aria-expanded="false" aria-controls="collapseExample">  </button>
+                  </p>
                 </div>
               </div>
-            <%end%>
-            <!--if developers exist and main ticket is in new request-->
-            <% @client_requests.each do |interview| %>
-              <% interview.departments.each do |dept| %>
-                <% dept.developers.each do |dev| %>
-                  <% if col.name == dev.developer_status && interview.kanban_column.name !=  dev.developer_status %>
-                    <div class="m-2 sub-card">
-                      <div class="card m-2" data-item="<%=dev.id %>">
-                        <div class="card-header">
-                          #id : <%=interview.id%>
-                          <%=interview.customer_name%>
-                        </div>
-                        <div class="card-body">
-                          #id : <%=dev.id%>
+              <div class="sub-tickets collapse" id="Req<%= interview.id %>">
+                <% interview.departments.each do |dept| %>
+                  <% if interview.kanban_column.name == 'new_request' %>
+                    <div class="card m-2  border border-dark" >
+                      <div class="card-body">
+                        <p class="mb-0">dept. <%=dept.name%></p>
+                        <p class="mb-0">no of resources: <%=dept.no_of_resources%></p>
+                      </div>
+                    </div>
+                  <% end %>
+                  <% dept.developers.each do |dev| %>
+                    <% if col.name == dev.developer_status %>
+                      <div class="sub-card">
+                        <div class="card m-2 border border-dark"  data-item="<%=dev.id %>">
                           <p class="mb-0">dept. <%=dept.name%></p>
                           <p class="mb-0">developer. <%=dev.name%></p>
                         </div>
                       </div>
-                    </div> 
+                    <% end %>
                   <% end %>
                 <%end%>
-              <%end %>
-            <%end%>
-          </div>
+              </div>
+            </div>
+          <%end%>
+          <!--if developers exist and main ticket is in new request-->
+          <% @client_requests.each do |interview| %>
+            <% interview.departments.each do |dept| %>
+              <% dept.developers.each do |dev| %>
+                <% if col.name == dev.developer_status && interview.kanban_column.name !=  dev.developer_status %>
+                  <div class="m-2 sub-card">
+                    <div class="card m-2" data-item="<%=dev.id %>">
+                      <div class="card-header">
+                        #id : <%=interview.id%>
+                        <%=interview.customer_name%>
+                      </div>
+                      <div class="card-body">
+                        #id : <%=dev.id%>
+                        <p class="mb-0">dept. <%=dept.name%></p>
+                        <p class="mb-0">developer. <%=dev.name%></p>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              <%end%>
+            <%end %>
+          <%end%>
+        </div>
       </div>
-    <% end %>  
-  </div> 
+    <% end %>
+  </div>
 </div>
-
 <script>
- 
-
   // ---------------- Kanban with Sortable --------------------
 
     $( function() {
