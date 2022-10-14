@@ -11,16 +11,19 @@
       <div class="box border" data-item="<%=col.id %>">
         <h3 class="text-center"><%=col.name.humanize%></h3>
         <hr>
-        <div class="kvs-card" style="height: 800px; overflow: auto;">
-          <% col.client_requests.each do |interview| %>
+        <div class="kvs-card" style="height: 770px; overflow: auto;">
+          <% col.client_requests.sort_by{ |card| card.position}.each do |interview| %>
             <div class="border bg-warning bg-opacity-50 m-2">
-              <div class="card m-2  border border-danger" >
+              <div class="card m-2 border border-danger" >
                 <div class="card-body">
                   <p class="card-text mb-0">#<%= interview.id %></p>
                   <h5 class="card-title"><%= interview.customer_name %></h5>
+                  <p>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#Req<%= interview.id %>" aria-expanded="false" aria-controls="collapseExample">  </button>
+                  </p>
                 </div>
               </div>
-              <div class="sub-tickets">
+              <div class="sub-tickets collapse" id="Req<%= interview.id %>">
                 <% interview.departments.each do |dept| %>
                   <% if interview.kanban_column.name == 'new_request' %>
                     <div class="card m-2  border border-dark" >

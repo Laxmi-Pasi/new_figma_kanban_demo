@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_12_105000) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_14_065628) do
   create_table "client_requests", force: :cascade do |t|
     t.string "customer_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "kanban_column_id", null: false
+    t.integer "position"
     t.index ["kanban_column_id"], name: "index_client_requests_on_kanban_column_id"
   end
 
@@ -35,6 +36,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_12_105000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "developer_status"
+    t.integer "dev_position"
     t.index ["department_id"], name: "index_developers_on_department_id"
   end
 
