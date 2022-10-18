@@ -1,78 +1,106 @@
 <%= link_to "New client request" ,new_client_request_path, method: :get ,class:"btn-warning border-0 rounded shadow p-3 m-3" %>
 <%= link_to "Add department" ,new_department_path, method: :get ,class:"btn-warning border-0 rounded shadow p-3 m-3" %>
+<%= turbo_frame_tag 'assign_dev_modal' %>
 <div class="container mt-5">
   <div class="d-flex justify-content-around">
     <% @kanban_columns.each do |col| %>
       <div class="box border" data-item="<%=col.id %>">
-          <h1><%=col.name%></h1>
-          <div class="kvs-card" style="height: 800px; overflow: auto;">
-            <% col.client_requests.each do |interview| %>
-              <div class="border bg-warning bg-opacity-50 m-2">
-                <div class="card m-2  border border-danger" >
-                  <div class="card-body">
-                    <p class="card-text mb-0">#<%= interview.id %></p>
-                    <h5 class="card-title"><%= interview.customer_name %></h5>
-                  </div>
-                </div>
-                <div class="sub-tickets">
-                  <% interview.departments.each do |dept| %>
-                    <% if interview.kanban_column.name == 'new_request' %>
-                      <div class="card m-2  border border-dark" >
-                        <div class="card-body">
-                            <p class="mb-0">dept. <%=dept.name%></p>
-                            <p class="mb-0">no of resources: <%=dept.no_of_resources%></p>
-                            <p><%= link_to "assign developer" %></p>
-                        </div>
-                      </div>
-                    <% end %>
-                    <% dept.developers.each do |dev| %>
-                      <% if col.name == dev.developer_status %>
-                        <div class="sub-card">
-                            <div class="card m-2  border border-dark"  data-item="<%=dev.id %>">
-                              <p class="mb-0">dept. <%=dept.name%></p>
-                              <p class="mb-0">developer. <%=dev.name%></p>
-                            </div>
-                        </div>
-                      <% end %>
-                    <% end %>
-                  <%end%>
+        <h1><%=col.name%></h1>
+        <div class="kvs-card" style="height: 800px; overflow: auto;">
+          <% col.client_requests.each do |interview| %>
+            <div class="border bg-warning bg-opacity-50 m-2">
+              <div class="card m-2  border border-danger" >
+                <div class="card-body">
+                  <p class="card-text mb-0">#<%= interview.id %></p>
+                  <h5 class="card-title"><%= interview.customer_name %></h5>
                 </div>
               </div>
-            <%end%>
-            <!--if developers exist and main ticket is in new request-->
-            <% @client_requests.each do |interview| %>
-              <% interview.departments.each do |dept| %>
-                <% dept.developers.each do |dev| %>
-                  <% if col.name == dev.developer_status && interview.kanban_column.name !=  dev.developer_status %>
-                    <div class="m-2 sub-card">
-                      <div class="card m-2" data-item="<%=dev.id %>">
-                        <div class="card-header">
-                          #id : <%=interview.id%>
-                          <%=interview.customer_name%>
-                        </div>
-                        <div class="card-body">
-                          #id : <%=dev.id%>
+              <div class="sub-tickets">
+                <% interview.departments.each do |dept| %>
+                  <% if interview.kanban_column.name == 'new_request' %>
+                    <div class="card m-2  border border-dark" >
+                      <div class="card-body">
+                        <p class="mb-0">dept. <%=dept.name%></p>
+                        <p class="mb-0">no of resources: <%=dept.no_of_resources%></p>
+                        <%= link_to 'Assign Developer', new_developer_path(id: dept.id), class:"btn btn-danger me-2 btn-sm assign-dev", data: { 'turbo-frame': 'assign_dev_modal' } %>
+                        <%# <%= button_to "Assign Developer" ,new_developer_path(id: dept.id), class:"btn btn-danger me-2 btn-sm assign-dev"%> 
+                      </div>
+                    </div>
+                  <% end %>
+                  <% dept.developers.each do |dev| %>
+                    <% if col.name == dev.developer_status %>
+                      <div class="sub-card">
+                        <div class="card m-2  border border-dark"  data-item="<%=dev.id %>">
                           <p class="mb-0">dept. <%=dept.name%></p>
                           <p class="mb-0">developer. <%=dev.name%></p>
                         </div>
                       </div>
-                    </div> 
+                    <% end %>
                   <% end %>
                 <%end%>
-              <%end %>
-            <%end%>
-          </div>
+              </div>
+            </div>
+          <%end%>
+          <!--if developers exist and main ticket is in new request-->
+          <% @client_requests.each do |interview| %>
+            <% interview.departments.each do |dept| %>
+              <% dept.developers.each do |dev| %>
+                <% if col.name == dev.developer_status && interview.kanban_column.name !=  dev.developer_status %>
+                  <div class="m-2 sub-card">
+                    <div class="card m-2" data-item="<%=dev.id %>">
+                      <div class="card-header">
+                        #id : <%=interview.id%>
+                        <%=interview.customer_name%>
+                      </div>
+                      <div class="card-body">
+                        #id : <%=dev.id%>
+                        <p class="mb-0">dept. <%=dept.name%></p>
+                        <p class="mb-0">developer. <%=dev.name%></p>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              <%end%>
+            <%end %>
+          <%end%>
+        </div>
       </div>
-    <% end %>  
-  </div> 
+    <% end %>
+  </div>
 </div>
-
+<div class="modal fade actionModal" id="assignDeveloperModal" tabindex="-1" role="dialog" aria-labelledby="assignDeveloperModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="actionHeader d-flex align-items-center">
+          <h5 class="modal-title" id="assignDeveloperModal">Assign developer</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modalForm" id="assignDeveloperForm">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" form="accept_skill_form" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
- 
-
   // ---------------- Kanban with Sortable --------------------
+  // import "jquery";
+if (typeof jQuery != 'undefined') {
 
-    $( function() {
+  console.log('jQuery loaded from index');
+}
+
+else {
+
+  console.log('not loaded from index');
+
+}
+
+  $( function() {
       $( ".kvs-card, .sub-card, .sub1-card" ).sortable({
         connectWith: ".kvs-card",
         // event => sub-card div
@@ -87,26 +115,22 @@
               this.parentElement.style.border = "2px dashed #ccc";
                   ui.item[0].style.border = "1px dashed black";
             },
-
             change: function(event, ui){
               // console.log("This is Change Event");
               // console.log("Called When something changes");
               ui.item[0].style.border = "1px solid red";
             },
-
             out: function( event, ui ) {
               // console.log("This is out event")
               // console.log("Called When card move outside sortable area")
               $(this).css('background-color', 'rgba(0,0,0,.0)')
             },
-
             over: function( event, ui ) {
               // debugger
               // console.log("This is over event")
               // console.log("Called When card move inside sortable area")
               $(this).css('background-color', 'rgba(0,0,0,.1)')
             },
-
           receive: function(event, ui) {
               this.style.border = "1px solid black";
               var developer_id = ui.item[0].dataset.item  // developer id
@@ -137,12 +161,10 @@
               })
               console.log("--------receive----------");
               $(this.parentElement).css('background-color', 'rgba(0,0,0,.0)')
-
             },
             update: function( event, ui ) {
               console.log("--------update----------");
             },
-
             stop: function( event, ui ) {
               console.log("--------stop----------");
               //------------------reordering-------------------
@@ -159,7 +181,6 @@
                   }
                 );
               });
-
               // $.ajax({
               //   url: '/interviews/sort',
               //   type: "post",
@@ -169,8 +190,6 @@
               // })
               //----------------------------------------------------
             },
-
         });
       });
-      // ---------------- Kanban with Sortable --------------------
 </script>

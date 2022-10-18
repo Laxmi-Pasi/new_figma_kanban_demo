@@ -1,0 +1,41 @@
+<%= turbo_frame_tag "assign_dev_modal" do %>
+  <div data-controller="assign_dev" class="modal fade actionModal text-center" id="assignDeveloperModal" tabindex="-1" role="dialog" aria-labelledby="assignDeveloperModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="actionHeader d-flex align-items-center">
+            <h5 class="modal-title" id="assignDeveloperModal">Assign developer</h5>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modalForm" id="assignDeveloperForm">
+          <%= form_for @developer, as: :developer, url: developers_create_path(@developer), method: :post do |f| %>
+            <h5>Please select a developer</h5>
+            <p><b>Client name: </b><%= @department.client_request.customer_name %></p>
+            <p><b>department name: </b><%= @department.name %></p>
+            <p><b>No of resources: </b></b><%= @department.no_of_resources %></p>
+          <p><%= link_to "View Details" %></p>
+          <div class="center">
+            <%= f.label :Developer_name , class: "form-group" %>
+            <%= f.text_field :name, class: "form-control" %>
+          </div>
+          <%= f.hidden_field :department_id, :value => @department.id %>
+          <%= f.hidden_field :developer_status  , value: "assigned_developer"%>
+          <div class="center">
+            <%= f.submit  class: "btn btn-primary my-3",data: {turbo: false} %>
+          </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // $("#exampleModal").modal("show");
+  // $("#openmodel").click(()=>{
+  //   $("#exampleModal").modal("show");
+  // });
+</script>
+<% end %>
