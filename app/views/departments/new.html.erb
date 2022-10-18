@@ -1,25 +1,35 @@
-<div class="container my-3">
-<div class="row justify-content-center">
-<div class="col-19 my-4">
-<div class="card text-center shadow mb-5 bg-light">
-<%= form_for @department, as: :department, url: departments_path(@department), method: :post do |f| %>
-  <div class="center">
-    <%= f.label :name , class: "form-group" %>
-    <%= f.text_field :name , class: "form-control" %>
+<div class="set-center flex-column form h-auto mt-3">
+  <div class="row justify-content-center">
+    <div class="card shadow" style="width: 36rem;">
+      <div class="card-header">
+        <h2 class="text-center mt-2">Department Form</h2>
+      </div>
+      <div class="card-body">
+        <!--Error Message-->
+        <% if flash[:errors] %>
+          <% flash[:errors].each do |error| %>
+            <p class="text-danger"><%= error %></p>
+          <% end %>
+        <% end %>
+        <!-- Form Started Here -->
+        <%= form_for @department, as: :department, url: departments_path(@department), method: :post do |f| %>
+          <br>
+          <%= f.label :name, "Department Name :" , class: "mb-2" %>
+          <%= f.text_field :name , placeholder: "Enter Department Name Here", class: "form-control" %>
+          <%= f.hidden_field :kanban_column_id  , value: "1"%>
+          <br>
+          <%= f.label :client_request_id , class: "mb-2" %><br>
+          <%= f.select :client_request_id, ClientRequest.all.map{|c| [c.customer_name,c.id]}, {},{ class:"form-select"} %>
+          <br>
+          <%= f.label :no_of_resources, "Number of Resources :" , class: "mb-2" %>
+          <%= f.number_field :no_of_resources, placeholder: "Enter No Of Resources Here", class: "form-control" %>
+          <br>
+          <div class="d-flex justify-content-center">
+            <%= f.submit "Save", class:"btn btn-secondary border-0 shadow py-2 px-5" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
-  <div class="center">
-    <%= f.label :client_request_id , class: "form-group" %><br>
-    <%= f.select :client_request_id, ClientRequest.all.map{|c| [c.customer_name,c.id]}, :prompt => "Select a client_request", class: "form-select" %> 
-  </div>
-  <div class="center">
-    <%= f.label :no_of_resources , class: "form-group" %>
-    <%= f.number_field :no_of_resources , class: "form-control" %>
-  </div>
-  <div class="center">
-    <%= f.submit  class: "btn btn-primary my-3" %>
-  </div>
-<% end %>
 </div>
-</div>
-</div>
-</div>
+

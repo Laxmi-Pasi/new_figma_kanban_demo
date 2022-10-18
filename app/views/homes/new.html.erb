@@ -1,16 +1,28 @@
-<div class="container my-3">
-<div class="row justify-content-center">
-<div class="col-19 my-4">
-<div class="card text-center shadow mb-5 bg-light">
-<%= form_with model: @client_request, url: homes_path, method: :post, local: true do |f| %>
-
-<%#= form_with model: @client_request do |f| %>
-  <div class="center">
-    <%= f.label :customer_name , class: "form-group" %>
-    <%= f.text_field :customer_name , class: "form-control" %>
+<div class="set-center flex-column form h-auto mt-3">
+  <div class="row justify-content-center">
+    <div class="card shadow" style="width: 36rem;">
+      <div class="card-header">
+        <h2 class="text-center mt-2">Client Form</h2>
+      </div>
+      <div class="card-body">
+        <!--Error Message-->
+        <% if flash[:errors] %>
+          <% flash[:errors].each do |error| %>
+            <p class="text-danger"><%= error %></p>
+          <% end %>
+        <% end %>
+        <!-- Form Started Here -->
+        <%= form_with model: @client_request, url: homes_path, method: :post, local: true do |f| %>
+          <br>
+          <%= f.label :customer_name, "Customer Name :" , class: "mb-2" %>
+          <%= f.text_field :customer_name , placeholder: "Enter Customer Name Here", class: "form-control" %>
+          <%= f.hidden_field :kanban_column_id  , value: "1"%>
+          <br>
+          <div class="d-flex justify-content-center">
+            <%= f.submit "Save", class:"btn btn-secondary border-0 shadow py-2 px-5" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
-    <%= f.hidden_field :kanban_column_id  , value: "1"%>
-  <div class="center">
-    <%= f.submit  class: "btn btn-primary my-3" %>
-  </div>
-<% end %>
+</div>
