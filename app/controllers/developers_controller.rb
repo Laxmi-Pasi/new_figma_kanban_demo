@@ -8,6 +8,8 @@ class DevelopersController < ApplicationController
   def create
     @developer = Developer.new(developer_params)
     if @developer.save
+      dept = Department.find(params[:developer][:department_id])
+      dept.update!(no_of_resources: dept.no_of_resources-1)
       flash[:notice] = 'Developer successfully created'
       redirect_to root_path
     else
