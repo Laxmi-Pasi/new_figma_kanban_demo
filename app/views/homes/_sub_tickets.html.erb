@@ -1,0 +1,43 @@
+<div class="m-2 sub-card">
+  <div class="card m-2" data-item="<%=dev.id %>">
+    <div class="card-body">
+      #id : <%=dev.id%>
+      <p class="mb-0">dept. <%=dev.name%></p>
+      <p class="mb-0">developer. <%=dev.name%></p>
+    </div>
+  </div>
+</div>
+
+ <% if col_name == col.name %>
+                <% if value.any? %>
+                  <div class="m-2">
+                    <div class="card m-2 sub-card">
+                      <div class="card-header">
+                        #id : <%#=interview.id%>
+                        <%#=interview.customer_name%>
+                      </div>
+                      <% value.each do |sub_ticket| %>
+                        <div class="card-body" data-item="<%=sub_ticket['id'] %>">
+                          #id : <%=sub_ticket['id']%>
+                          <p class="mb-0">developer. <%=sub_ticket['name']%></p>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                  <% end %>
+              <% end %>
+
+
+               <% if k["developers"] != [] && col_name == col.name %>
+                  <p><%=k["developers"]%></p>
+                <% end %>
+
+
+                <% k.each do |k1,v| %>
+                <div class="bg-warning bg-opacity-25">
+                    <p><%=k1%><%=v%></p>
+                  <% if k1 == "developers" && v != [] %>
+                    <p><%=k1%><%=v%></p>
+                  <% end %>
+                </div>
+                <% end %>

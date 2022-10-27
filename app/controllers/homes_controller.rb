@@ -3,6 +3,8 @@ class HomesController < ApplicationController
   def index
     @kanban_columns = KanbanColumn.includes(:client_requests, :departments, :developers).all
     @client_requests = ClientRequest.includes(:departments, :developers).all
+    @sub_tickets_details = SubTicketsPresenter.new(@kanban_columns, @client_requests).client_details
+    binding.pry
   end
 
   def developer_status_update
