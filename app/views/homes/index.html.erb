@@ -32,7 +32,7 @@
                         <p class="mb-0">dept. <%=dept.name%></p>
                         <p class="mb-0">no of resources: <%=dept.no_of_resources%></p>
                         <%= link_to 'Assign Developer', new_developer_path(id: dept.id), class:"btn btn-danger me-2 btn-sm assign-dev", data: { 'turbo-frame': 'assign_dev_modal' } %>
-                        <%# <%= button_to "Assign Developer" ,new_developer_path(id: dept.id), class:"btn btn-danger me-2 btn-sm assign-dev"%> 
+                        <%# <%= button_to "Assign Developer" ,new_developer_path(id: dept.id), class:"btn btn-danger me-2 btn-sm assign-dev"%>
                       </div>
                     </div>
                   <% end %>
@@ -41,53 +41,61 @@
                       <div class="sub-card">
                         <div class="card m-2  border border-dark"  data-item="<%=dev.id %>">
                           <p class="mb-0">dept. <%=dept.name%></p>
-                          < class="mb-0">developer. <%=dev.name%></p>
+                          <p class="mb-0">developer. <%=dev.name%></p>
                         </div>
                       </div>
                     <% end %>
-                  <% end %> 
+                  <% end %>
                 <%end%>
               </div>
             </div>
           <%end%>
           <!--if developers exist and main ticket is in new request-->
-            <% @sub_tickets_details.each do |col_name, value| %>
-              <% value.each do |k| %>
-              <% if k["developers"] != [] && col_name == col.name %>
-                <div class="">
-                  <div class="m-2 card border" >
-                    <div class="card-header" >
-                      <h6><%=k["customer_name"] %></h6>
-                    </div>
-                    <div class="sub-card">
-                      <% k["developers"].each do |k1| %>
-                      <div class="card-body mt-2 bg-info bg-opacity-25" style="z-index:100;" data-item="<%=k1.id %>">
-                        <p><%=k1.name %></p>
-                        <p><%=k1.developer_status %></p>  
+          <% @client_requests.each do |interview| %>
+            <% @card_id = interview.customer_name+"_#{interview.id}"+"_#{col.id}" %>
+            <% @card_class = interview.customer_name+"_#{interview.id}" %>
+            <div class="border bg-warning bg-opacity-50 m-2 card-header main-card-div" >
+              #id : <%=interview.id%>
+              <%=interview.customer_name%>
+              <% interview.departments.each do |dept| %>
+                <% dept.developers.each do |dev| %>
+                  <% if col.name == dev.developer_status && interview.kanban_column.name !=  dev.developer_status %>
+                    <div class="m-2 sub-card" id="<%= @card_id %>">
+                      <div class="card m-2" data-item="<%= dev.id %>" data-value="<%= @card_class %>">
+                        <div class="card-body">
+                          #id : <%=dev.id%>
+                          <p class="mb-0">dept. <%=dept.name%></p>
+                          <p class="mb-0">developer. <%=dev.name%></p>
+                        </div>
                       </div>
-                      <% end %>
                     </div>
-                  </div>
-                </div>
-              <% end %>
-              <% end %>
-            <% end %>
+                  <% end %>
+                <%end%>
+              <%end %>
+            </div>
+          <%end%>
           <!-- -->
         </div>
       </div>
     <% end %>
   </div>
 </div>
-
 <script>
   // ---------------- Kanban with Sortable --------------------
   // import "jquery";
-if (typeof jQuery != 'undefined') {
-  console.log('jQuery loaded from index');
-}
-else {
-  console.log('not loaded from index');
-}
+
+  var test = document.querySelectorAll(".main-card-div")
+  for (let i = 0; i < test.length; i++) {
+    if (test[i].children.length == 0){
+      test[i].remove();
+    }
+  }
+  if (typeof jQuery != 'undefined') {
+    console.log('jQuery loaded from index');
+  }
+  else {
+    console.log('not loaded from index');
+  }
 
   $( function() {
       $( ".kvs-card, .sub-card, .sub1-card" ).sortable({
@@ -150,6 +158,33 @@ else {
               })
               console.log("--------receive----------");
               $(this.parentElement).css('background-color', 'rgba(0,0,0,.0)')
+              // debugger
+              var data_value = ui.item[0].getAttribute('data-value')
+              var main_div = document.querySelectorAll('[id^='+data_value+'_'+kanban_col_id+']')
+              // var sub_div = document.getElementsByClassName(ui.item[0].getAttribute('data-value'))
+              // debugger
+              if (main_div.length != 0){
+                main_div[0].appendChild(ui.item[0]);
+              }
+              else {
+                // debugger
+                //  Need to create a div
+                //  Create this div 1 = <div class="border bg-warning bg-opacity-50 m-2 card-header main-card-div" >
+                // Create this div 2 = <div class="m-2 sub-card" id="<%= @card_id %>">
+                // CARD ID = cust-name_cust-id_col-id
+
+                var create_div = document.createElement("div");
+                this.appendChild(create_div);
+                var dataValueArray = data_value.split("_")
+                create_div.innerHTML = '#id : ' + dataValueArray[1] + " " + dataValueArray[0]
+                create_div.classList.add("border", "bg-warning", "bg-opacity-50", "m-2", "card-header", "main-card-div");
+                var subcard_div = create_div.appendChild(document.createElement("div"));
+                subcard_div.classList.add("m-2", "sub-card")
+                subcard_div.appendChild(ui.item[0])
+                subcard_div.setAttribute('id',''+data_value+'_'+kanban_col_id+'');
+              }
+
+              // window.location.reload();
             },
             update: function( event, ui ) {
               console.log("--------update----------");
