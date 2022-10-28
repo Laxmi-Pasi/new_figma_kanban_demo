@@ -9,7 +9,12 @@ class DevelopersController < ApplicationController
     @developer = Developer.new(developer_params)
     if @developer.save
       dept = Department.find(params[:developer][:department_id])
-      dept.update!(no_of_resources: dept.no_of_resources-1)
+      dept.update!(no_of_resources: dept.no_of_resources - 1)
+      # ----------------- changing from new to assigned when all resources has been asssigned------------
+      client_request = dept.client_request
+      resouce_array = client_request.departments.pluck(:no_of_resources)
+      client_request.update!(kanban_column_id: 2) if resouce_array.max.zero?
+      #--------------------------------------
       flash[:notice] = 'Developer successfully created'
       redirect_to root_path
     else

@@ -7,8 +7,12 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 customer_name = ["Gateway","meditab"]
+4.times do |i|
+  KanbanColumn.create!(name: i+1)
+end
+
 1.times do |i|
-  kanban_column = KanbanColumn.find_or_create_by!(name:i)
+  kanban_column = KanbanColumn.find_or_create_by!(name:i+1)
   client_request = kanban_column.client_requests.create!(customer_name: customer_name[i])
   dept_name = ["ror","pyhon","php"]
   no_of_resources = [2,3,4]
@@ -18,7 +22,7 @@ customer_name = ["Gateway","meditab"]
 end
 
 1.times do |i|
-  kanban_column = KanbanColumn.find_or_create_by!(name:i)
+  kanban_column = KanbanColumn.find_or_create_by!(name:i+1)
   client_request =  kanban_column.client_requests.create!(customer_name: customer_name[i+1])
   dept_name = ["design","ios"]
   no_of_resources = [2,1]
