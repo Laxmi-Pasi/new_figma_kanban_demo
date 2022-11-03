@@ -3,9 +3,9 @@ import "@hotwired/turbo-rails"
 import "controllers"
 // import "jquery"
 // import "jquery-ujs"
-
 // import "jquery-ui"
-console.log($)
+console.log("apication.js")
+
 // if (typeof jQuery != 'undefined') {
 
 //   console.log('jQuery Loaded');
@@ -16,7 +16,4 @@ console.log($)
 //   console.log('not loaded yet');
 
 // }
-
-
-
 

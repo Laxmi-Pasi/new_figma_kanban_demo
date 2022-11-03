@@ -1,0 +1,113 @@
+<div class="container">
+  <div class="flex-column">
+    <!-- Author Table -->
+    <div>
+      <table class="table  table-striped">
+        <ol class="fs-2">
+          <thead class="table-dark">
+            <td class="text-center"> Check box </td>
+            <td class="text-center"> Customer Name </td>
+            <td class="text-center"> Customer Details </td>
+            <td class="text-center"> Customer Name </td>
+          </thead>
+          <%= form_tag classic_views_path, method: :delete do %>
+            <% @client_requests.each do |client| %>
+              <tr>
+                <td class="text-center"><input type="checkbox" name="client_request_ids[]" value= "<%= client.id %>" class="laxmi"></td>
+                <td class="text-center"> <%= client.customer_name %> </td>
+                <td class="text-center"> <%= client.customer_name %> </td>
+                <td class="text-center"> <%= client.customer_name %> </td>
+                <%# ---------------- Department ---------------- %>
+                <tr>
+                  <td colspan="4">
+                    <table class="table table-warning">
+                      <thead class="table-secondary">
+                        <td class="text-center"> Check box </td>
+                        <td class="text-center"> Dep Name </td>
+                        <td class="text-center"> Dep Name </td>
+                        <td class="text-center"> Dep Name </td>
+                      </thead>
+                      <% client.departments.each do |department| %>
+                        <tr>
+                          <td class="text-center"><input type="checkbox" name="department_ids[]" value= "<%= department.id %>" ></td>
+                          <td class="text-center"><%= department.name %></td>
+                          <td class="text-center"><%= department.no_of_resources %></td>
+                          <td class="text-center"><%= department.no_of_resources %></td>
+                          <%# ---------------- Developers ---------------- %>
+                          <tr>
+                            <td colspan="4">
+                              <table class="table table-info">
+                                <thead class="table-success">
+                                  <td class="text-center"><input type="checkbox" name="dheeman"></td>
+                                  <td class="text-center"> Developer Name </td>
+                                  <td class="text-center"> Developer status </td>
+                                  <td class="text-center"> DEV Name </td>
+                                </thead>
+                                <% department.developers.each do |developer| %>
+                                  <tr>
+                                    <td class="text-center"><input type="checkbox" name="developer_ids[]" value= "<%= developer.id %>" class="laxmi" ></td>
+                                    <td class="text-center"><%= developer.name %></td>
+                                    <td class="text-center"><%= developer.developer_status %></td>
+                                    <td class="text-center"><%= developer.developer_status %></td>
+                                  </tr>
+                                <% end %>
+                              </table>
+                            </td>
+                          </tr>
+                        </tr>
+                      <% end %>
+                    </table>
+                  </td>
+                </tr>
+              </tr>
+            <% end %>
+          <%= submit_tag "Delete selected", id: "submitBtn" %>
+          <% end %>
+        </ol>
+      </table>
+    </div>
+  </div>
+</div>
+<%# <script>
+  var submitBtn = document.getElementById("submitBtn")
+  submitBtn.disabled = false
+  function myCheckbox(){
+  var rahul = document.getElementsByClassName("rutik")
+  for (var i=0; i < rahul.length; i++) {
+    if (rahul[i].checked == true)
+    {
+      // document.getElementById("submitBtn").disabled = false
+    }
+    else
+    {
+      // document.getElementById("submitBtn").disabled = true
+      console.log("failed")
+    }
+  }
+</script> %>
+
+<script>
+const checkbox = document.getElementsByName('dheeman')
+for(let i=0;i<checkbox.length;i++){
+  checkbox[i].addEventListener("change",()=>{
+    let table=checkbox[i].parentElement.parentElement.parentElement.parentElement;
+    let tBody=table.getElementsByTagName('tbody')[0];
+    let tableRow = tBody.getElementsByTagName('tr');
+    for(let i=0;i<tableRow.length;i++){
+      let td=tableRow[i].children[0];
+
+      if (td.checked && td.children[0]){
+        
+      }
+
+
+      // if(!td.children[0].checked){
+      //   td.children[0].checked=true;
+      // }else{
+      //   td.children[0].checked=false;
+      // }
+    }
+  })
+}
+console.log(checkbox)
+</script>
